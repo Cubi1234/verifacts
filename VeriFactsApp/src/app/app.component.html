@@ -1,0 +1,11 @@
+<div style="text-align:center">
+  <h1>{{ title }}</h1>
+  <form (ngSubmit)="predictHeadline()">
+    <label for="headline">Enter a news headline:</label>
+    <input type="text" [(ngModel)]="headline" name="headline" required>
+    <button type="submit">Predict</button>
+  </form>
+  <div *ngIf="prediction">
+    <h2>Prediction: {{ prediction }}</h2>
+  </div>
+</div>
