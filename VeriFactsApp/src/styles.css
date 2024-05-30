@@ -1,1 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
+.progress {
+    height: 20px;
+}
+  
+.progress-bar {
+  background-color: #007bff;
+}
+  
+.logo img {
+  max-width: 100px;
+  margin-bottom: 20px;
+}
+  
+img.img-fluid {
+  max-width: 5%;
+  height: auto;
+}
+
+.container {
+  margin-top: 10px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+body {
+  background-color: #d7ebff; /* Cambia este valor al color deseado */
+}

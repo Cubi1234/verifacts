@@ -1,11 +1,25 @@
-<div style="text-align:center">
-  <h1>{{ title }}</h1>
-  <form (ngSubmit)="predictHeadline()">
-    <label for="headline">Enter a news headline:</label>
-    <input type="text" [(ngModel)]="headline" name="headline" required>
-    <button type="submit">Predict</button>
-  </form>
-  <div *ngIf="prediction">
-    <h2>Prediction: {{ prediction }}</h2>
+<app-header></app-header>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h1 class="mb-4">Verify a Headline</h1>
+      <form (ngSubmit)="predictHeadline()" class="mb-3 rounded-lg p-4">
+        <div class="input-group">
+          <input type="text" [(ngModel)]="headline" name="headline" class="form-control" placeholder="Enter a news headline" required>
+          <button type="submit" class="btn btn-primary">Verify</button>
+        </div>
+      </form>
+      <div *ngIf="isLoading" class="progress mt-4">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%"></div>
+      </div>
+      <ng-container *ngIf="prediction !== null">
+        <div *ngIf="prediction" [@fadeIn] class="card mt-4">
+          <div class="card-body">
+            <h2 class="card-title">Prediction</h2>
+            <h4 class="card-text">{{ prediction }}</h4>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>
