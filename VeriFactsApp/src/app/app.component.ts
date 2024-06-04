@@ -21,22 +21,33 @@ export class AppComponent {
   title = 'Headline Predictor';
   headline = '';
   prediction: string | null = null;
-  isLoading = false;
+  certainty: number | null = null;
+  entries: any[] = [];
 
   constructor(private headlineService: HeadlineService) {}
 
   predictHeadline() {
-    this.isLoading = true;
     this.prediction = null; 
+    this.certainty = null; 
 
     this.headlineService.getPrediction(this.headline).subscribe(response => {
-      setTimeout(() => {
-        this.prediction = response.prediction;
-        this.isLoading = false;
-      }, 1000);
+      this.prediction = response.result;
+      this.certainty = response.certainty;
     }, error => {
       console.error('Error:', error);
-      this.isLoading = false;
     });
+
+    this.headlineService.getAllEntries().subscribe(entries => {
+      this.entries = entries;
+      console.log(this.entries[0][2])
+    }, error => {
+      console.error('Error retrieving entries:', error);
+    });
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    date.setHours(date.getHours() - 2);
+    return date.toISOString().split('T')[0] + ' ' + date.toTimeString().split(' ')[0];
   }
 }

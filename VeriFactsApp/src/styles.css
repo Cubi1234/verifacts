@@ -32,3 +32,17 @@ img.img-fluid {
 body {
   background-color: #d7ebff; /* Cambia este valor al color deseado */
 }
+
+@keyframes fillAnimation {
+  0% {
+    width: 0%;
+  }
+}
+
+.progress-bar {
+  animation: fillAnimation 1s ease-out;
+}
+
+.text-muted {
+  color: #6c757d;
+}
