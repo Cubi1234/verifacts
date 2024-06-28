@@ -28,8 +28,6 @@ export class AppComponent implements OnInit {
   showVerifiedHeadlines = false;
   currentPage = 0;
   entriesPerPage = 9;
-  currentPageFacts = 0;
-  itemsPerPageFacts = 6;
   isSidebarOpen = false;
 
   selectedTab: string = 'verified';
@@ -60,33 +58,10 @@ export class AppComponent implements OnInit {
     });
   }
 
-  getPaginatedResults() {
-    const startIndex = this.currentPageFacts * this.itemsPerPageFacts;
-    return this.factCheckResults.slice(startIndex, startIndex + this.itemsPerPageFacts);
-  }  
-
-  nextPageFacts() {
-    const totalPages = Math.ceil(this.factCheckResults.length / this.itemsPerPageFacts);
-    if (this.currentPageFacts < totalPages - 1) {
-      this.currentPageFacts++;
-    }
-  }
-  
-  previousPageFacts() {
-    if (this.currentPageFacts > 0) {
-      this.currentPageFacts--;
-    }
-  }  
-
-  getTotalFactPages(): number {
-    return Math.ceil(this.factCheckResults.length / this.itemsPerPageFacts);
-  }
-  
   predictHeadline() {
     this.prediction = null;
     this.certainty = null;
     this.currentPage = 0;
-    this.currentPageFacts = 0;
     this.factCheckResults = [];
     
     this.headlineService.getPrediction(this.headline).subscribe(response => {
@@ -131,11 +106,11 @@ export class AppComponent implements OnInit {
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
-  
+
   handleFactCheckResponse(response: any) {
     this.factCheckResults = response;
   }
-  
+
   extractKeywords(headline: string): string[] {
     const words = headline.split(' ');
     const stopwords = ['a', 'an', 'the', 'of', 'in', 'on', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', 

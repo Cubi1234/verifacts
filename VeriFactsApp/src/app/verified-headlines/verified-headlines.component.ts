@@ -4,7 +4,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 @Component({
   selector: 'app-verified-headlines',
   templateUrl: './verified-headlines.component.html',
-  styleUrls: ['./verified-headlines.component.css'],
   animations: [
     trigger('fadeIn', [
       state('void', style({
