@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, request, jsonify
 import numpy as np
 import pandas as pd
@@ -11,12 +12,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, accuracy_score, confusion_matrix, classification_report
 from flask_cors import CORS
 import mysql.connector
-
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-
-# Download necessary NLTK resources
+CORS(app)
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 nltk.download('stopwords')
@@ -27,15 +29,15 @@ DB_PASSWORD = 'new_password'
 DB_HOST = 'localhost'
 DB_PORT = '3306'
 
-# Load the dataset
+# Cargar el dataset
 data = pd.read_csv('clickbait_data.csv')
 
-# Split the dataset into training and testing sets
+# Dividir el dataset en sets de entrenamiento y pruebas
 X = data['headline']
 y = data['clickbait']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=22, stratify=y)
 
-# Define text preprocessing functions
+# Funciones de preprocesamiento del texto
 def tokenize(text):
     return text.split()
 
@@ -69,18 +71,40 @@ def preprocess(text):
     tokens = lemmatize(tokens)
     return ' '.join(tokens)
 
-# Preprocess the training data
+# Preprocesar los datos de entrenamiento y prueba
 X_train = X_train.apply(preprocess)
+X_test = X_test.apply(preprocess)
 
-# Vectorize the text data
+# Vectorizar los datos
 vectorizer = CountVectorizer(analyzer='word', ngram_range=(1, 2), max_features=22500)
 X_train_vect = vectorizer.fit_transform(X_train)
+X_test_vect = vectorizer.transform(X_test)
 
-# Train a Naive Bayes classifier
+# Clasificador Naive Bayes Multinomial
 classifier = MultinomialNB()
 classifier.fit(X_train_vect, y_train)
 
-# Function to classify a headline
+# Evaluar el modelo
+y_pred = classifier.predict(X_test_vect)
+accuracy = accuracy_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+class_report = classification_report(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+print("F1 Score:", f1)
+print("Confusion Matrix:\n", conf_matrix)
+print("Classification Report:\n", class_report)
+
+# Visualizar la matriz de confusión
+plt.figure(figsize=(10, 7))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Non-clickbait', 'Clickbait'], yticklabels=['Non-clickbait', 'Clickbait'])
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
+
+# Función de clasificación de titulares
 def classify_headline(headline):
     processed_headline = preprocess(headline)
     vect_headline = vectorizer.transform([processed_headline])
@@ -90,7 +114,6 @@ def classify_headline(headline):
     result = 'Clickbait' if prediction[0] == 1 else 'Non-clickbait'
     return result, certainty
 
-
 # Function to connect to the database
 def get_db_connection():
     return mysql.connector.connect(
@@ -99,7 +122,7 @@ def get_db_connection():
         password=DB_PASSWORD,
         database=DB_NAME
     )
-    
+
 @app.route('/classify', methods=['POST'])
 def classify():
     data = request.json
@@ -130,6 +153,39 @@ def get_all_entries():
 
     # Return entries as JSON response
     return jsonify(entries)
+
+@app.route('/fact_check', methods=['GET'])
+def fact_check():
+    # API endpoint
+    url = "https://factchecktools.googleapis.com/v1alpha1/claims:search"
+
+    # Query parameters
+    query = request.args.get('query')
+    language_code = request.args.get('languageCode')
+    review_publisher_site_filter = request.args.get('reviewPublisherSiteFilter')
+    max_age_days = request.args.get('maxAgeDays')
+    page_size = request.args.get('pageSize')
+    page_token = request.args.get('pageToken')
+    offset = request.args.get('offset')
+
+    params = {
+        'query': query,
+        'languageCode': language_code,
+        'reviewPublisherSiteFilter': review_publisher_site_filter,
+        'maxAgeDays': max_age_days,
+        'pageSize': page_size,
+        'pageToken': page_token,
+        'offset': offset,
+        'key': 'XXX'
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status() 
+        data = response.json()
+        return jsonify(data)
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
