@@ -7,11 +7,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
+import { VerifiedHeadlinesComponent } from './verified-headlines/verified-headlines.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
+    VerifiedHeadlinesComponent,
   ],
   imports: [
     BrowserAnimationsModule,

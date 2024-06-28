@@ -56,34 +56,10 @@
           <div class="tab-pane fade" 
                [ngClass]="{ 'show active': selectedTab === 'verified' }" 
                id="verified" role="tabpanel" aria-labelledby="verified-tab">
-            <div [@fadeIn]>
-              <h2 class="mt-5">News headlines recently verified</h2>
-              <i class="text-start mt-2">News headlines recently verified in VeriFacts.</i>
-            </div>
-            <div class="row mt-4">
-              <div [@fadeIn] class="col-lg-4 col-md-6 col-sm-12 d-flex align-items-stretch" *ngFor="let entry of paginatedEntries">
-                <div class="card mb-4 w-100">
-                  <div class="card-body">
-                    <h5 class="card-title">{{ entry[1] }}</h5>
-                    <hr>
-                    <h6 class="card-title">{{ entry[2] }}</h6>
-                    <p class="card-text text-muted">{{ formatDate(entry[3]) }}</p>
-                    <div class="progress mt-1">
-                      <div class="progress-bar" role="progressbar"
-                        [ngClass]="{'progress-bar-clickbait': entry[2] === 'Clickbait', 'progress-bar-non-clickbait': entry[2] === 'Non-clickbait'}"
-                        [style.width.%]="entry[4] ? entry[4] * 100 : 0"
-                        [attr.aria-valuenow]="entry[4] ? entry[4] * 100 : 0" aria-valuemin="0" aria-valuemax="100">
-                        {{ entry[4] ? (entry[4] * 100).toFixed(2) : 0 }}%
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div *ngIf="showVerifiedHeadlines" class="mt-3" [@fadeIn]>
-              <button class="me-5 mb-5 btn btn-primary" (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
-              <button class="ms-5 mb-5 btn btn-primary" (click)="nextPage()" [disabled]="(currentPage + 1) * entriesPerPage >= entries.length">Next</button>
-            </div>
+            <app-verified-headlines
+              [entries]="entries"
+              [showVerifiedHeadlines]="showVerifiedHeadlines">
+            </app-verified-headlines>
           </div>
           
           <div class="tab-pane fade" [ngClass]="{ 'show active': selectedTab === 'related' }" 
@@ -125,4 +101,6 @@
           </div>
         </div>
       </div>
-      
+    </div>
+  </div>
+

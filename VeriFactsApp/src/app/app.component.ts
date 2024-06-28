@@ -173,21 +173,4 @@ export class AppComponent implements OnInit {
     date.setHours(date.getHours() - 2);
     return date.toISOString().split('T')[0] + ' ' + date.toTimeString().split(' ')[0];
   }
-  
-  get paginatedEntries() {
-    const startIndex = this.currentPage * this.entriesPerPage;
-    return this.entries.slice(startIndex, startIndex + this.entriesPerPage);
-  }
-
-  nextPage() {
-    if ((this.currentPage + 1) * this.entriesPerPage < this.entries.length) {
-      this.currentPage++;
-    }
-  }
-
-  previousPage() {
-    if (this.currentPage > 0) {
-      this.currentPage--;
-    }
-  }
 }
