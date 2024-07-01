@@ -4,7 +4,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 @Component({
   selector: 'app-related-searches',
   templateUrl: './related-searches.component.html',
-  styleUrls: ['./related-searches.component.css'],
   animations: [
     trigger('fadeIn', [
       state('void', style({
