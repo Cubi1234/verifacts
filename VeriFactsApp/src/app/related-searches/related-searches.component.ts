@@ -57,4 +57,17 @@ export class RelatedSearchesComponent implements OnInit {
     date.setHours(date.getHours() - 2);
     return date.toISOString().split('T')[0] + ' ' + date.toTimeString().split(' ')[0];
   }
+
+  getReviewClass(reviewText: string): string {
+    const lowerCaseReview = reviewText.toLowerCase();
+    if (lowerCaseReview.includes('false') || lowerCaseReview.includes('incorrect') || lowerCaseReview.includes('fake') 
+      || lowerCaseReview.includes('not correct') || lowerCaseReview.includes('not true')) {
+      return 'red-text';
+    }
+    if (lowerCaseReview.includes('true') || lowerCaseReview.includes('correct')) {
+      return 'green-text';
+    }
+    return 'orange-text';
+  }  
+  
 }

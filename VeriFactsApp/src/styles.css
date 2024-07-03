@@ -150,7 +150,6 @@ body {
   border-radius: 10px;
 }
 
-
 .sidebar-nav {
   list-style: none;
   padding: 0;
@@ -172,5 +171,20 @@ body {
 
 #menu-toggle {
   margin: 20px;
+}
+
+.red-text {
+  color: red;
+  font-weight: bold;
+}
+
+.green-text {
+  color: green;
+  font-weight: bold;
+}
+
+.orange-text{
+  color: orange;
+  font-weight: bold;
 }
 
