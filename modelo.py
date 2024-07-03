@@ -176,7 +176,7 @@ def fact_check():
         'pageSize': page_size,
         'pageToken': page_token,
         'offset': offset,
-        'key': 'AIzaSyB8XRqyHbsHrgtSbQ2qsNxVIx7HIm2vgng'
+        'key': '???'
     }
 
     try:
